@@ -1,0 +1,90 @@
+<openerp>
+    <data>
+        <template id="list">
+    <t t-call="website.layout">
+      <div id="wrap">
+        <div class="oe_structure"/>
+        <div class="container">
+            <h1>主机列表</h1>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="oe_structure">
+                        <div>
+                            <p>帐户：admin</p>
+                            <p>密码：与当前登录密码相同</p>
+                        </div>
+						<div>
+					<table width = "100%" border = "1" align = "left">
+					   <tr>
+					      <td width="20%" style="border:1px solid #000; border-collapse:collapse; padding:3px 3px">域名</td>
+						  <td style="border:1px solid #000; border-collapse:collapse; padding:3px 3px">服务器</td>
+						  <td style="border:1px solid #000; border-collapse:collapse; padding:3px 3px">到期时间</td>
+						  <td style="border:1px solid #000; border-collapse:collapse; padding:3px 3px">状态</td>
+						  <td align="center" style="border:1px solid #000; border-collapse:collapse; padding:3px 3px">操作</td>
+					   </tr>
+					   <t t-foreach="users" t-as="user">
+					   <tr>
+                  <form t-attf-action="http://{{user.url_addres}}/web/login" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
+						<input type="hidden" name="csrf_token" t-attf-value="#{csrf_token}"/>				          
+					      <td style="border:1px solid #000; border-collapse:collapse; padding:3px 3px">
+					          <input type="text" readonly="true" autofocus="autofocus" class="form-control" name="domain_name" required="True" t-attf-value="#{user.host_name}"/>
+                              <input type="hidden" name="login" value="admin" id="login" class="form-control" required="required" autofocus="autofocus"/>
+                              <input type="hidden" t-attf-value="#{password}" name="password" id="password" class="form-control" required="required" t-att-autofocus="'autofocus' if login else None"/>
+					      </td>
+						  <td style="border:1px solid #000; border-collapse:collapse; padding:3px 3px">
+						      <select class="form-control" name="server_select">
+                                   <option name="saas_server" class="form-control" t-attf-value="#{user.server.server_addres}"><t t-esc="user.server.server_addres"/></option>
+                              </select>
+						  </td>
+						  <td style="border:1px solid #000; border-collapse:collapse; padding:3px 3px"><t t-esc="user.end_date"/></td>
+						  <td style="border:1px solid #000; border-collapse:collapse; padding:3px 3px"><t t-esc="user.state"/></td>
+						  <td align="center" style="border:1px solid #000; border-collapse:collapse; padding:3px 3px">
+						  
+                               <input type="hidden" name="redirect" t-att-value="redirect"/>
+                               <div class="clearfix oe_login_buttons">
+                                  <button t-if="user.state=='Yes'" type="submit" class="btn btn-primary">登录</button>
+                               </div>
+						  </td>
+				 </form>
+					   </tr>
+                    </t>
+					<tr>
+                  <form action="/saas/create" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
+						<input type="hidden" name="csrf_token" t-attf-value="#{csrf_token}"/>				          
+					<td style="border:1px solid #000; border-collapse:collapse; padding:3px 3px"><input type="text" autofocus="autofocus" class="form-control" name="domain_name" required="True" t-attf-value="#{domain_name or ''}"/></td>
+					<td style="border:1px solid #000; border-collapse:collapse; padding:3px 3px">
+					   <select class="form-control" name="server_select">
+					   <t t-foreach="servers" t-as="server">
+                          <option name="saas_server" class="form-control" t-attf-value="#{server.id or ''}"><t t-esc="server.server_addres"/></option>
+					   </t>
+                        </select>
+					</td>
+					<td style="border:1px solid #000; border-collapse:collapse; padding:3px 3px"></td>
+					<td style="border:1px solid #000; border-collapse:collapse; padding:3px 3px"></td>
+					<td align = "center" style="border:1px solid #000; border-collapse:collapse; padding:3px 3px">
+                       <button class="btn btn-primary btn-lg">申请</button>
+                    </td>
+				 </form>
+					</tr>
+					</table>						
+						</div>					
+                    </div>
+                <div>
+                   
+                </div>
+                </div>
+                <div class="col-md-4 mb32">
+                    <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or ''">
+                        <a class="btn btm-sm btn-default" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (res_company._name, res_company.id)">Change address</a>
+                    </div>
+                    <t t-call="website.company_description"/>
+                </div>
+            </div>
+        </div>
+        <div class="oe_structure"/>
+      </div>
+    </t>				
+        </template>
+
+    </data>
+</openerp>
