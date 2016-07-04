@@ -62,9 +62,9 @@ class saas_website(http.Controller):
                   'server':kwargs.get('server_select', False),
                   }
             ids = request.registry['saas.user.info'].create(cr, uid, values,context=context)
-            #request.registry['saas.user.info'].create_use_db(cr, uid, [ids],password,context=context)
+            request.registry['saas.user.info'].create_use_db(cr, uid, [ids],password,context=context)
             template = request.registry('ir.model.data').get_object(cr, SUPERUSER_ID, 'saas_admin', 'registry_saas_db_email')
-            request.registry('email.template').send_mail(cr, SUPERUSER_ID, template.id, ids, force_send=True, raise_exception=True, context=context)
+            request.registry('mail.template').send_mail(cr, SUPERUSER_ID, template.id, ids, force_send=True, raise_exception=True, context=context)
         users = http.request.env['saas.user.info']
         servers = http.request.env['saas.server']
         values = {
